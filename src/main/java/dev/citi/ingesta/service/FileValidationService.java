@@ -10,8 +10,8 @@ import java.util.List;
 public class FileValidationService {
     private static final List<String> ALLOWED_TYPES = List.of(
             MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE
-            // MediaType.APPLICATION_PDF_VALUE // OCR fails for PDF now
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.APPLICATION_PDF_VALUE // OCR fails for PDF now
     );
 
     private static final long MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB max

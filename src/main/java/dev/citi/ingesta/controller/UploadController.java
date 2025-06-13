@@ -13,13 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/upload-api")
 public class UploadController {
     private final S3Service s3Service;
     private final TextractService textractService;
     private final FileValidationService fileValidationService;
-
-    @Value("${aws.s3.bucket}") private String bucketName;
 
     public UploadController(S3Service s3Service, TextractService textractService, FileValidationService fileValidationService) {
         this.s3Service = s3Service;
@@ -27,7 +25,7 @@ public class UploadController {
         this.fileValidationService = fileValidationService;
     }
 
-    @PostMapping
+    @PostMapping("/just-upload")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
         try {
             String s3Key = s3Service.upload(file);
@@ -38,13 +36,13 @@ public class UploadController {
         }
     }
 
-    @PostMapping("/with-ocr")
+    @PostMapping("/upload-with-ocr")
     public ResponseEntity<String> uploadAndExtract(@RequestParam("file") MultipartFile file) {
         try {
             fileValidationService.validateFile(file);
 
             String key = s3Service.upload(file);
-            String text = textractService.extractText(bucketName, key);
+            String text = textractService.extractText(key);
             return ResponseEntity.ok(text);
 
         } catch (IllegalArgumentException ex) {
